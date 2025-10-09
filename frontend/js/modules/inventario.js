@@ -1,82 +1,99 @@
-const LS_KEY = 'erp_products_v1';
+const LS_KEY_PRODUCTS = 'erp_products_v2';
+const LS_KEY_MOVES = 'erp_moves_v2';
 
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 
-export function init() {
-    // re-leer DOM del fragmento cargado
-    const form = document.getElementById('product-form');
-    const tbody = document.getElementById('product-table-body');
-    const totalEl = document.getElementById('total-products');
-    const search = document.getElementById('search');
+export function init(){
+  let products = JSON.parse(localStorage.getItem(LS_KEY_PRODUCTS) || '[]');
+  let moves = JSON.parse(localStorage.getItem(LS_KEY_MOVES) || '[]');
 
-    let editingId = null;
-    let products = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+  const formProd = document.getElementById('product-form');
+  const formMove = document.getElementById('move-form');
+  const tbodyProd = document.getElementById('product-table-body');
+  const tbodyMoves = document.getElementById('move-table-body');
+  const totalValue = document.getElementById('total-value');
+  const selectProd = document.getElementById('m-product');
 
-    function save() { localStorage.setItem(LS_KEY, JSON.stringify(products)); }
-    function render(filtered) {
-        const list = filtered ?? products;
-        tbody.innerHTML = list.map((p, idx) => `
+  const save = () => {
+    localStorage.setItem(LS_KEY_PRODUCTS, JSON.stringify(products));
+    localStorage.setItem(LS_KEY_MOVES, JSON.stringify(moves));
+  };
+
+  const renderProducts = () => {
+    tbodyProd.innerHTML = products.map(p => `
       <tr>
         <td>${escapeHtml(p.name)}</td>
-        <td>${escapeHtml(p.sku || '')}</td>
-        <td>${Number(p.qty)}</td>
-        <td>${Number(p.price).toFixed(2)}</td>
-        <td>
-          <button data-action="edit" data-id="${p.id}">Editar</button>
-          <button data-action="delete" data-id="${p.id}">Eliminar</button>
-        </td>
+        <td>${escapeHtml(p.sku)}</td>
+        <td>${p.qty}</td>
+        <td>${p.price.toFixed(2)}</td>
+        <td>${(p.qty * p.price).toFixed(2)}</td>
       </tr>`).join('');
-        totalEl.textContent = list.length;
+
+    const total = products.reduce((sum,p)=>sum+p.qty*p.price,0);
+    totalValue.textContent = `$${total.toFixed(2)}`;
+
+    selectProd.innerHTML = products.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
+  };
+
+  const renderMoves = () => {
+    tbodyMoves.innerHTML = moves.map(m => `
+      <tr>
+        <td>${new Date(m.date).toLocaleString()}</td>
+        <td>${m.type}</td>
+        <td>${escapeHtml(m.productName)}</td>
+        <td>${m.qty}</td>
+      </tr>`).join('');
+  };
+
+  // Form agregar producto
+  formProd.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = document.getElementById('p-name').value.trim();
+    const sku = document.getElementById('p-sku').value.trim();
+    const qty = Number(document.getElementById('p-qty').value) || 0;
+    const price = Number(document.getElementById('p-price').value) || 0;
+
+    if(!name){ alert('Nombre obligatorio'); return; }
+    const newProd = { id: uid(), name, sku, qty, price };
+    products.push(newProd);
+    save();
+    renderProducts();
+    formProd.reset();
+  });
+
+  // Form movimientos
+  formMove.addEventListener('submit', e => {
+    e.preventDefault();
+    const type = document.getElementById('m-type').value;
+    const pid = document.getElementById('m-product').value;
+    const qty = Number(document.getElementById('m-qty').value);
+
+    const prod = products.find(p => p.id === pid);
+    if(!prod){ alert('Producto no encontrado'); return; }
+    if(qty <= 0){ alert('Cantidad inválida'); return; }
+
+    if(type === 'entrada') prod.qty += qty;
+    else if(type === 'salida'){
+      if(prod.qty < qty){ alert('Stock insuficiente'); return; }
+      prod.qty -= qty;
     }
 
-    function escapeHtml(s) { return String(s || '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;') }
-
-    render();
-
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-        const name = document.getElementById('p-name').value.trim();
-        const sku = document.getElementById('p-sku').value.trim();
-        const qty = Number(document.getElementById('p-qty').value || 0);
-        const price = Number(document.getElementById('p-price').value || 0);
-
-        if (!name) { alert('El nombre es obligatorio'); return; }
-
-        if (editingId) {
-            const p = products.find(x => x.id === editingId);
-            if (p) { p.name = name; p.sku = sku; p.qty = qty; p.price = price; }
-            editingId = null;
-            document.getElementById('p-id').value = '';
-        } else {
-            products.push({ id: uid(), name, sku, qty, price });
-        }
-        save();
-        render();
-        form.reset();
+    moves.push({
+      id: uid(),
+      productId: pid,
+      productName: prod.name,
+      type,
+      qty,
+      date: new Date().toISOString()
     });
 
-    tbody.addEventListener('click', e => {
-        const btn = e.target.closest('button');
-        if (!btn) return;
-        const id = btn.dataset.id;
-        const action = btn.dataset.action;
-        if (action === 'delete') { products = products.filter(p => p.id !== id); save(); render(); }
-        if (action === 'edit') {
-            const p = products.find(x => x.id === id);
-            if (!p) return;
-            editingId = id;
-            document.getElementById('p-id').value = id;
-            document.getElementById('p-name').value = p.name;
-            document.getElementById('p-sku').value = p.sku;
-            document.getElementById('p-qty').value = p.qty;
-            document.getElementById('p-price').value = p.price;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    });
+    save();
+    renderProducts();
+    renderMoves();
+    formMove.reset();
+  });
 
-    search?.addEventListener('input', () => {
-        const q = search.value.trim().toLowerCase();
-        if (!q) { render(); return; }
-        render(products.filter(p => (p.name || '').toLowerCase().includes(q) || (p.sku || '').toLowerCase().includes(q)));
-    });
+  renderProducts();
+  renderMoves();
 }

@@ -1,33 +1,50 @@
 <section class="card">
-    <h2>Inventario</h2>
+  <h2>Inventario</h2>
 
-    <form id="product-form" class="card" aria-label="Agregar producto">
-        <div class="form-row">
-            <input name="name" id="p-name" placeholder="Nombre producto" required>
-            <input name="sku" id="p-sku" placeholder="SKU">
-            <input name="qty" id="p-qty" type="number" min="0" placeholder="Cantidad" value="0">
-            <input name="price" id="p-price" type="number" step="0.01" min="0" placeholder="Costo unitario">
-            <button type="submit">Guardar</button>
-        </div>
-        <input type="hidden" id="p-id">
+  <div class="card">
+    <h3>Agregar producto</h3>
+    <form id="product-form" class="form-row">
+      <input id="p-name" placeholder="Nombre" required>
+      <input id="p-sku" placeholder="SKU">
+      <input id="p-qty" type="number" placeholder="Cantidad inicial" min="0">
+      <input id="p-price" type="number" step="0.01" placeholder="Costo unitario" min="0">
+      <button type="submit">Guardar</button>
     </form>
+  </div>
 
-    <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-            <div><strong>Productos:</strong> <span id="total-products">0</span></div>
-            <div><input id="search" placeholder="Buscar por nombre o sku"></div>
-        </div>
-        <table class="table" style="margin-top:8px">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>SKU</th>
-                    <th>Cantidad</th>
-                    <th>Costo</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="product-table-body"></tbody>
-        </table>
-    </div>
+  <div class="card">
+    <h3>Movimientos</h3>
+    <form id="move-form" class="form-row">
+      <select id="m-type">
+        <option value="entrada">Entrada</option>
+        <option value="salida">Salida</option>
+      </select>
+      <select id="m-product"></select>
+      <input id="m-qty" type="number" placeholder="Cantidad" min="1">
+      <button type="submit">Registrar</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Inventario actual</h3>
+    <table class="table">
+      <thead>
+        <tr><th>Nombre</th><th>SKU</th><th>Cantidad</th><th>Costo U.</th><th>Total</th></tr>
+      </thead>
+      <tbody id="product-table-body"></tbody>
+      <tfoot>
+        <tr><td colspan="4" style="text-align:right"><b>Total Inventario:</b></td><td id="total-value">$0.00</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Historial de movimientos</h3>
+    <table class="table">
+      <thead>
+        <tr><th>Fecha</th><th>Tipo</th><th>Producto</th><th>Cantidad</th></tr>
+      </thead>
+      <tbody id="move-table-body"></tbody>
+    </table>
+  </div>
 </section>
