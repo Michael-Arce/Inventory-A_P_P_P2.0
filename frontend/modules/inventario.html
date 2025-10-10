@@ -1,0 +1,54 @@
+<section class="card">
+  <h2>Inventario</h2>
+
+  <div class="card">
+    <h3>Agregar producto</h3>
+    <form id="product-form" class="form-row">
+      <input id="p-name" placeholder="Nombre" required>
+      <input id="p-sku" placeholder="SKU (Referencia)" required>
+      <input id="p-qty" type="number" placeholder="Cantidad inicial" min="0">
+      <input id="p-price" type="number" step="1" placeholder="Costo unitario" min="0">
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Movimientos</h3>
+    <form id="move-form" class="form-row">
+      <select id="m-type">
+        <option value="">Entrada</option>
+        <option value="salida">Salida</option>
+      </select>
+      <select id="m-product"></select>
+      <input id="m-qty" type="number" placeholder="Cantidad" min="1">
+      <button type="submit">Registrar</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Inventario actual</h3>
+    <table class="table">
+      <thead>
+        <tr><th>Nombre</th><th>SKU</th><th>Cantidad</th><th>Costo U.</th><th>Total</th></tr>
+      </thead>
+      <tbody id="product-table-body"></tbody>
+      <tfoot>
+        <tr><td colspan="4" style="text-align:right"><b>Total Inventario:</b></td><td id="total-value">$0.00</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Historial de movimientos</h3>
+    <table class="table">
+      <thead>
+        <tr><th>Fecha</th><th>Tipo</th><th>Producto</th><th>Cantidad</th></tr>
+      </thead>
+      <tbody id="move-table-body"></tbody>
+    </table>
+  </div>
+  
+</section>
+
+<script src="modules/inventario.js"></script>
+

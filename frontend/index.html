@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ERP - Base</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">ERP · Demo</div>
+    <nav class="top-actions">Usuario · ⚙</nav>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <ul>
+        <li><a href="./modules/inventario.html" data-module="inventario" class="nav-link">Inventario</a></li>
+        <li><a href="#catalogo" data-module="catalogo" class="nav-link">Catálogo / Parametrización</a></li>
+        <li><a href="#ventas" data-module="ventas" class="nav-link">Facturación / Ventas</a></li>
+        <nav>
+        <a href="#" data-module="inventario">Inventario</a>
+        <a href="#" data-module="traslados">Traslados</a>
+</nav>
+
+      </ul>
+    </aside>
+
+    <main id="app-content" class="content">
+      <!-- aquí se cargan los módulos -->
+    </main>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
