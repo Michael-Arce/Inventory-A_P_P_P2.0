@@ -8,7 +8,7 @@ function setActive(name){
 async function loadModule(name, push=true){
   try {
     // Cargar el HTML del módulo (desde frontend/modules)
-    const res = await fetch(`../modules/${name}.html`);
+    const res = await fetch(`./modules/${name}.html`);
     if (!res.ok) throw new Error('Módulo no encontrado: ' + name);
     content.innerHTML = await res.text();
 

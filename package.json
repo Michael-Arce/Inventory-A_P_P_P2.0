@@ -2,9 +2,10 @@
   "name": "erp-inventory",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./backend/server.js",
   "type": "module",
   "scripts": {
+    "start": "node ./backend/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,7 +21,7 @@
   "homepage": "https://github.com/Michael-Arce/Inventory-A_P_P_P2.0#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
+    "dotenv": "^16.4.5",
     "express": "^5.1.0",
     "mysql2": "^3.15.2",
     "sequelize": "^6.37.7"

@@ -6,6 +6,7 @@ import cors from "cors";
 import productoRouter from "./routes/productoRouter.js";
 import negocioRoutes from "./routes/negocioRoutes.js";
 import trasladoRoutes from "./routes/trasladoRoutes.js";
+//import agregarRouters from "./routes/agregarRouters.js";
 
 import "./models/asociaciones.js"; // Importar asociaciones
 
@@ -14,7 +15,7 @@ import "./models/asociaciones.js"; // Importar asociaciones
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = 4000;
 
 app.use(cors());
 app.use(express.json());
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/api/productos", productoRouter);
 app.use("/api/negocios", negocioRoutes);
 app.use("/api/traslados", trasladoRoutes);
+
 
 // 🚀 Probar conexión a la base de datos
 try {
