@@ -5,12 +5,14 @@ function setActive(name){
   navLinks.forEach(a => a.classList.toggle('active', a.dataset.module === name));
 }
 
-async function loadModule(name, push=true){
+async function cargarModulo(nombre) {
   try {
-    // Cargar el HTML del módulo (desde frontend/modules)
-    const res = await fetch(`../modules/${name}.html`);
-    if (!res.ok) throw new Error('Módulo no encontrado: ' + name);
-    content.innerHTML = await res.text();
+    const modulo = await import(`./modules/${nombre}.js`);
+    modulo.default();
+  } catch (error) {
+    console.error("Error cargando módulo:", error);
+    mostrarError(`Módulo no encontrado: ${nombre}`);
+  }
 
     // Intentar importar el JS del módulo (desde frontend/js/modules)
     try {
