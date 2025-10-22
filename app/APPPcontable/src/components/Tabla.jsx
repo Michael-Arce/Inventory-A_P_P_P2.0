@@ -180,7 +180,7 @@ const Tabla = () => {
                             <td className="fw-bold text-dark text-start">{producto.nombre}</td>
                             <td className="text-end text-success fw-bold">
                                 {pesos(producto.precio)}
-                            </td>
+                            </td> 
                             <td className="text-center">
                                 <span className={`badge ${producto.cantidad < 10 ? "bg-danger" : "bg-primary"}`}>
                                     {producto.cantidad}
